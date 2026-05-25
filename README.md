@@ -1,4 +1,4 @@
-# ai-platform-service-deploy
+# llm-evaluation-service-deploy
 
 Helm-based deployment configuration for the LLM evaluation service.
 
