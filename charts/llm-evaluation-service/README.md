@@ -1,0 +1,143 @@
+# llm-evaluation-service Helm Chart
+
+Deploys the LLM evaluation service to Kubernetes.
+
+The chart is intentionally small. It covers the API Deployment, Service, ServiceAccount,
+ConfigMap, optional Secret, optional demo Postgres, NetworkPolicy examples, and optional
+Ingress.
+
+## Values Files
+
+```text
+values.yaml                Safe defaults and shared chart settings
+values-local.yaml          Local cluster demo with in-cluster Postgres
+values-dev.yaml            Managed-runtime example with external secrets
+values-prod-example.yaml   Production-shaped example values
+```
+
+## Validate
+
+```bash
+helm lint charts/llm-evaluation-service
+
+helm template llm-evaluation-service \
+  charts/llm-evaluation-service \
+  -f charts/llm-evaluation-service/values-local.yaml
+```
+
+Render all provided values files:
+
+```bash
+helm template llm-evaluation-service charts/llm-evaluation-service \
+  -f charts/llm-evaluation-service/values-local.yaml
+
+helm template llm-evaluation-service charts/llm-evaluation-service \
+  -f charts/llm-evaluation-service/values-dev.yaml
+
+helm template llm-evaluation-service charts/llm-evaluation-service \
+  -f charts/llm-evaluation-service/values-prod-example.yaml
+```
+
+## Local Install
+
+`values-local.yaml` enables demo Postgres and creates demo Secret values.
+
+```bash
+helm upgrade --install llm-evaluation-service \
+  charts/llm-evaluation-service \
+  --namespace llm-evaluation \
+  --create-namespace \
+  -f charts/llm-evaluation-service/values-local.yaml
+```
+
+Check rollout:
+
+```bash
+kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service
+kubectl -n llm-evaluation get pods
+```
+
+Port-forward:
+
+```bash
+kubectl -n llm-evaluation port-forward service/llm-evaluation-service 8000:80
+```
+
+Test:
+
+```bash
+curl -s http://localhost:8000/health/ready
+```
+
+Expected response:
+
+```json
+{"status":"ready"}
+```
+
+## Managed Runtime Install
+
+Managed environments should provide secrets externally and use a managed Postgres
+connection string. Do not enable demo Postgres outside local development.
+
+Example with a pre-created Kubernetes Secret:
+
+```bash
+export APP_DATABASE_URL='<managed-postgres-connection-url>'
+
+kubectl -n llm-evaluation create secret generic llm-evaluation-service-secrets \
+  --from-literal=APP_DATABASE_URL="$APP_DATABASE_URL"
+```
+
+Install with the dev values and an immutable image tag:
+
+```bash
+helm upgrade --install llm-evaluation-service \
+  charts/llm-evaluation-service \
+  --namespace llm-evaluation \
+  --create-namespace \
+  -f charts/llm-evaluation-service/values-dev.yaml \
+  --set image.tag=<full-commit-sha>
+```
+
+## Image Tags
+
+The service repo publishes:
+
+```text
+ghcr.io/bfalkowski/llm-evaluation-service-starter:latest
+ghcr.io/bfalkowski/llm-evaluation-service-starter:<full-commit-sha>
+```
+
+Use `latest` for quick local demos. Use full commit SHA tags for managed runtime
+deployments.
+
+## Important Values
+
+| Value | Purpose |
+| --- | --- |
+| `image.repository` | Container image repository |
+| `image.tag` | Image tag to deploy |
+| `replicaCount` | Number of API replicas |
+| `config.environment` | Service environment label |
+| `config.otelExporter` | `console`, `otlp`, or `none` |
+| `config.otelOtlpEndpoint` | OTLP collector endpoint |
+| `secrets.create` | Create a Kubernetes Secret from values |
+| `secrets.existingSecretName` | Use an externally managed Secret |
+| `postgresDemo.enabled` | Enable local demo Postgres |
+| `networkPolicy.enabled` | Render NetworkPolicy resources |
+| `ingress.enabled` | Render Ingress resource |
+
+## Cleanup
+
+```bash
+helm uninstall llm-evaluation-service --namespace llm-evaluation
+kubectl delete namespace llm-evaluation
+```
+
+## Notes
+
+- Secret values in `values-local.yaml` are only for local demos.
+- Managed environments should inject secrets through the platform or deployment pipeline.
+- NetworkPolicy behavior depends on the cluster CNI.
+- The chart does not install an OpenTelemetry Collector; it only configures the service to export to one.

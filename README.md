@@ -28,6 +28,8 @@ docs/
 
 ## Render Locally
 
+See `charts/llm-evaluation-service/README.md` for full chart usage.
+
 ```bash
 helm lint charts/llm-evaluation-service
 helm template llm-evaluation-service \
