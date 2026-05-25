@@ -38,6 +38,7 @@ config:
   otelExporter: console
   otelOtlpEndpoint: ""
   storageBackend: postgres
+  autoCreateSchema: false
 
 secrets:
   create: false
@@ -52,6 +53,11 @@ postgresDemo:
   username: app
   service:
     port: 5432
+
+migrations:
+  enabled: false
+  useHelmHooks: true
+  backoffLimit: 3
 
 networkPolicy:
   enabled: true

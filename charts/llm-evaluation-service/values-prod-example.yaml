@@ -8,6 +8,7 @@ config:
   environment: production
   otelExporter: otlp
   otelOtlpEndpoint: http://otel-collector:4317
+  autoCreateSchema: false
 
 secrets:
   create: false
@@ -15,6 +16,9 @@ secrets:
 
 postgresDemo:
   enabled: false
+
+migrations:
+  enabled: true
 
 ingress:
   enabled: true

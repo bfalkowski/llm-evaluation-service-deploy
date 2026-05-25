@@ -4,7 +4,7 @@ Deploys the LLM evaluation service to Kubernetes.
 
 The chart is intentionally small. It covers the API Deployment, Service, ServiceAccount,
 ConfigMap, optional Secret, optional demo Postgres, NetworkPolicy examples, and optional
-Ingress.
+Ingress. It can also run Alembic migrations as a Helm pre-install/pre-upgrade Job.
 
 ## Values Files
 
@@ -103,6 +103,32 @@ helm upgrade --install llm-evaluation-service \
   --set image.tag=<full-commit-sha>
 ```
 
+## Database Migrations
+
+`values-local.yaml`, `values-dev.yaml`, and `values-prod-example.yaml` enable the
+migration Job:
+
+```yaml
+migrations:
+  enabled: true
+```
+
+By default the Job runs as a Helm `pre-install,pre-upgrade` hook:
+
+```text
+alembic upgrade head
+```
+
+The application config sets:
+
+```yaml
+config:
+  autoCreateSchema: false
+```
+
+That keeps schema changes as an explicit deployment step instead of relying on app
+startup to create tables.
+
 ## Image Tags
 
 The service repo publishes:
@@ -125,8 +151,10 @@ deployments.
 | `config.environment` | Service environment label |
 | `config.otelExporter` | `console`, `otlp`, or `none` |
 | `config.otelOtlpEndpoint` | OTLP collector endpoint |
+| `config.autoCreateSchema` | Whether the app creates tables on startup |
 | `secrets.create` | Create a Kubernetes Secret from values |
 | `secrets.existingSecretName` | Use an externally managed Secret |
+| `migrations.enabled` | Render the Alembic migration Job |
 | `postgresDemo.enabled` | Enable local demo Postgres |
 | `networkPolicy.enabled` | Render NetworkPolicy resources |
 | `ingress.enabled` | Render Ingress resource |

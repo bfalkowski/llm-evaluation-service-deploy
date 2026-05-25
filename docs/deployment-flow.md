@@ -62,6 +62,7 @@ Responsibilities:
 4. Update the deploy repo values or pass the tag with `--set image.tag=<full-commit-sha>`.
 5. Deploy repo CI runs Helm lint, Helm template, and kubeconform.
 6. Apply the chart with Helm or let a GitOps controller apply it.
+7. The migration Job runs `alembic upgrade head` before app pods roll forward.
 
 Manual Helm example:
 

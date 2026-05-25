@@ -95,6 +95,9 @@
         "storageBackend": {
           "type": "string",
           "enum": ["postgres", "memory"]
+        },
+        "autoCreateSchema": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -103,7 +106,8 @@
         "otelEnabled",
         "otelExporter",
         "otelOtlpEndpoint",
-        "storageBackend"
+        "storageBackend",
+        "autoCreateSchema"
       ]
     },
     "secrets": {
@@ -155,6 +159,22 @@
         }
       },
       "required": ["enabled", "image", "database", "username", "service"]
+    },
+    "migrations": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "useHelmHooks": {
+          "type": "boolean"
+        },
+        "backoffLimit": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["enabled", "useHelmHooks", "backoffLimit"]
     },
     "networkPolicy": {
       "type": "object",
@@ -209,6 +229,7 @@
     "config",
     "secrets",
     "postgresDemo",
+    "migrations",
     "networkPolicy",
     "ingress",
     "resources"
