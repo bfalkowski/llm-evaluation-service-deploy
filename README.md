@@ -1,0 +1,59 @@
+# ai-platform-service-deploy
+
+Helm-based deployment configuration for the LLM evaluation service.
+
+This repository is intended to stay separate from the service source code. The service
+repository builds and publishes a container image; this repository selects an image tag
+and applies environment-specific Kubernetes configuration.
+
+## Structure
+
+```text
+charts/
+  llm-evaluation-service/
+    Chart.yaml
+    values.yaml
+    values-local.yaml
+    values-dev.yaml
+    values-prod-example.yaml
+    templates/
+docs/
+```
+
+## Render Locally
+
+```bash
+helm lint charts/llm-evaluation-service
+helm template llm-evaluation-service \
+  charts/llm-evaluation-service \
+  -f charts/llm-evaluation-service/values-local.yaml
+```
+
+## Install Locally
+
+```bash
+helm upgrade --install llm-evaluation-service \
+  charts/llm-evaluation-service \
+  --namespace llm-evaluation \
+  --create-namespace \
+  -f charts/llm-evaluation-service/values-local.yaml
+```
+
+## Image Tags
+
+The service image is published by the service repository:
+
+```text
+ghcr.io/bfalkowski/llm-evaluation-service-starter:latest
+ghcr.io/bfalkowski/llm-evaluation-service-starter:<full-commit-sha>
+```
+
+Use `latest` for quick local demos. Use immutable commit SHA tags for managed
+Kubernetes environments.
+
+## Secrets
+
+Do not commit real secrets. Local secret files and `.env` files are ignored.
+
+The chart can create demo secrets for local use, but managed environments should inject
+secrets through the platform, deployment pipeline, or a dedicated secret operator.

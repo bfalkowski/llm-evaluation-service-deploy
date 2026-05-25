@@ -1,0 +1,74 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/bfalkowski/llm-evaluation-service-starter
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automountToken: false
+  annotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+config:
+  environment: local
+  logLevel: INFO
+  otelEnabled: true
+  otelExporter: console
+  otelOtlpEndpoint: ""
+  storageBackend: postgres
+
+secrets:
+  create: false
+  databaseUrl: ""
+  postgresPassword: ""
+  existingSecretName: ""
+
+postgresDemo:
+  enabled: false
+  image: postgres:16-alpine
+  database: llm_evaluations
+  username: app
+  service:
+    port: 5432
+
+networkPolicy:
+  enabled: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  host: ""
+  tls:
+    enabled: false
+    secretName: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

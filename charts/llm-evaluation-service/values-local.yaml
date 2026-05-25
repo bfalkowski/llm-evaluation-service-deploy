@@ -1,0 +1,19 @@
+image:
+  tag: latest
+  pullPolicy: IfNotPresent
+
+config:
+  environment: local
+  otelExporter: console
+  otelOtlpEndpoint: ""
+
+secrets:
+  create: true
+  databaseUrl: postgresql+asyncpg://app:app@llm-evaluation-service-postgres:5432/llm_evaluations
+  postgresPassword: app
+
+postgresDemo:
+  enabled: true
+
+ingress:
+  enabled: false
