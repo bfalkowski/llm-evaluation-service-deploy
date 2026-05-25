@@ -6,6 +6,12 @@ This repository is intended to stay separate from the service source code. The s
 repository builds and publishes a container image; this repository selects an image tag
 and applies environment-specific Kubernetes configuration.
 
+Service source repository:
+`https://github.com/bfalkowski/llm-evaluation-service-starter`
+
+Published image:
+`ghcr.io/bfalkowski/llm-evaluation-service-starter`
+
 ## Structure
 
 ```text
