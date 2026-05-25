@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "llm-evaluation-service.selectorLabels" . | nindent 8 }}
+        {{- include "llm-evaluation-service.baseSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: migrations
     spec:
       restartPolicy: OnFailure
