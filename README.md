@@ -37,6 +37,9 @@ helm template llm-evaluation-service \
   -f charts/llm-evaluation-service/values-local.yaml
 ```
 
+CI runs the same Helm lint/render checks and validates rendered manifests with
+`kubeconform`.
+
 ## Install Locally
 
 ```bash
