@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   helm:
     name: Helm
@@ -24,7 +27,7 @@ jobs:
       - name: Set up kubeconform
         uses: bmuschko/setup-kubeconform@v1
         with:
-          version: 0.7.0
+          kubeconform-version: 0.7.0
 
       - name: Lint chart
         run: helm lint charts/llm-evaluation-service
