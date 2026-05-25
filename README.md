@@ -33,6 +33,8 @@ docs/
 ```
 
 Start with `docs/deployment-flow.md` for the full service-image-to-Helm-deploy flow.
+Use `docs/local-platform.md` to run the API, demo Postgres, and console together in a
+local Kubernetes cluster.
 
 ## Render Locally
 
@@ -57,6 +59,9 @@ helm upgrade --install llm-evaluation-service \
   --create-namespace \
   -f charts/llm-evaluation-service/values-local.yaml
 ```
+
+See `docs/local-platform.md` for rollout checks, port-forwarding, smoke tests, and
+cleanup.
 
 ## Image Tags
 

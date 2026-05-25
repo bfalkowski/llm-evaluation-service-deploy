@@ -45,6 +45,7 @@ helm template llm-evaluation-service charts/llm-evaluation-service \
 ## Local Install
 
 `values-local.yaml` enables demo Postgres and creates demo Secret values.
+It also enables the companion Streamlit console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -85,6 +86,9 @@ Open the console at:
 ```text
 http://localhost:8501
 ```
+
+For the complete local platform flow, see `docs/local-platform.md` from the repository
+root.
 
 ## Managed Runtime Install
 
