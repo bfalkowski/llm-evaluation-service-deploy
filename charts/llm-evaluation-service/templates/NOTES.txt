@@ -9,3 +9,13 @@
 3. Check readiness:
 
    curl -s http://localhost:8000/health/ready
+
+{{- if .Values.console.enabled }}
+4. Port-forward the console:
+
+   kubectl -n {{ .Release.Namespace }} port-forward service/{{ include "llm-evaluation-service.consoleName" . }} 8501:{{ .Values.console.service.port }}
+
+5. Open:
+
+   http://localhost:8501
+{{- end }}

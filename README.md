@@ -1,6 +1,6 @@
 # llm-evaluation-service-deploy
 
-Helm-based deployment configuration for the LLM evaluation service.
+Helm-based deployment configuration for the LLM evaluation service and companion console.
 
 This repository is intended to stay separate from the service source code. The service
 repository builds and publishes a container image; this repository selects an image tag
@@ -9,8 +9,14 @@ and applies environment-specific Kubernetes configuration.
 Service source repository:
 `https://github.com/bfalkowski/llm-evaluation-service-starter`
 
+Console source repository:
+`https://github.com/bfalkowski/llm-evaluation-console`
+
 Published image:
 `ghcr.io/bfalkowski/llm-evaluation-service-starter`
+
+Console image:
+`ghcr.io/bfalkowski/llm-evaluation-console`
 
 ## Structure
 
@@ -59,6 +65,13 @@ The service image is published by the service repository:
 ```text
 ghcr.io/bfalkowski/llm-evaluation-service-starter:latest
 ghcr.io/bfalkowski/llm-evaluation-service-starter:<full-commit-sha>
+```
+
+The console image is published by the console repository:
+
+```text
+ghcr.io/bfalkowski/llm-evaluation-console:latest
+ghcr.io/bfalkowski/llm-evaluation-console:<full-commit-sha>
 ```
 
 Use `latest` for quick local demos. Use immutable commit SHA tags for managed

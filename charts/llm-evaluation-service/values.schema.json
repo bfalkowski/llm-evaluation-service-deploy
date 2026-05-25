@@ -215,6 +215,115 @@
       },
       "required": ["enabled", "className", "annotations", "host", "tls"]
     },
+    "console": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "replicaCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pullPolicy": {
+              "type": "string",
+              "enum": ["Always", "IfNotPresent", "Never"]
+            }
+          },
+          "required": ["repository", "tag", "pullPolicy"]
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["ClusterIP", "NodePort", "LoadBalancer"]
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "targetPort": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            }
+          },
+          "required": ["type", "port", "targetPort"]
+        },
+        "config": {
+          "type": "object",
+          "properties": {
+            "apiBaseUrl": {
+              "type": "string"
+            }
+          },
+          "required": ["apiBaseUrl"]
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "className": {
+              "type": "string"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "host": {
+              "type": "string"
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "secretName": {
+                  "type": "string"
+                }
+              },
+              "required": ["enabled", "secretName"]
+            }
+          },
+          "required": ["enabled", "className", "annotations", "host", "tls"]
+        },
+        "resources": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "image",
+        "service",
+        "config",
+        "podSecurityContext",
+        "securityContext",
+        "ingress",
+        "resources"
+      ]
+    },
     "resources": {
       "type": "object"
     }
@@ -232,6 +341,7 @@
     "migrations",
     "networkPolicy",
     "ingress",
+    "console",
     "resources"
   ]
 }

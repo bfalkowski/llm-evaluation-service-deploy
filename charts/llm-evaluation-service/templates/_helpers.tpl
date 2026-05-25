@@ -26,6 +26,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "llm-evaluation-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "llm-evaluation-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: service
 {{- end -}}
 
 {{- define "llm-evaluation-service.serviceAccountName" -}}
@@ -46,4 +47,18 @@ default
 
 {{- define "llm-evaluation-service.postgresName" -}}
 {{- printf "%s-postgres" (include "llm-evaluation-service.fullname" .) -}}
+{{- end -}}
+
+{{- define "llm-evaluation-service.consoleName" -}}
+{{- printf "%s-console" (include "llm-evaluation-service.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "llm-evaluation-service.consoleSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "llm-evaluation-service.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: console
+{{- end -}}
+
+{{- define "llm-evaluation-service.serviceUrl" -}}
+{{- printf "http://%s:%d" (include "llm-evaluation-service.fullname" .) (.Values.service.port | int) -}}
 {{- end -}}

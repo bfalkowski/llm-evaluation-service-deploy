@@ -1,6 +1,6 @@
 # Deployment Flow
 
-This repository is the deployment/config side of a two-repo service delivery flow.
+This repository is the deployment/config side of a multi-repo delivery flow.
 
 ```text
 llm-evaluation-service-starter
@@ -8,8 +8,13 @@ llm-evaluation-service-starter
   -> build container image
   -> publish image to GHCR
 
+llm-evaluation-console
+  -> lint
+  -> build console container image
+  -> publish image to GHCR
+
 llm-evaluation-service-deploy
-  -> select image tag in Helm values
+  -> select service and console image tags in Helm values
   -> render and validate Kubernetes manifests
   -> install or upgrade into Kubernetes
 ```
@@ -37,6 +42,27 @@ Published image:
 ghcr.io/bfalkowski/llm-evaluation-service-starter:<tag>
 ```
 
+## Console Repository
+
+Source:
+
+```text
+https://github.com/bfalkowski/llm-evaluation-console
+```
+
+Responsibilities:
+
+- Streamlit operator console.
+- Evaluation submission and review workflow.
+- Dockerfile.
+- CI for linting, image build, and image publishing.
+
+Published image:
+
+```text
+ghcr.io/bfalkowski/llm-evaluation-console:<tag>
+```
+
 ## Deployment Repository
 
 Source:
@@ -47,7 +73,7 @@ https://github.com/bfalkowski/llm-evaluation-service-deploy
 
 Responsibilities:
 
-- Helm chart.
+- Helm chart for the service and optional console.
 - Environment-specific values.
 - Secret expectations.
 - Managed Postgres assumptions.
@@ -58,11 +84,12 @@ Responsibilities:
 
 1. Merge a service change to `main`.
 2. Service CI publishes a new image tag to GHCR.
-3. Choose the immutable image tag for deployment.
-4. Update the deploy repo values or pass the tag with `--set image.tag=<full-commit-sha>`.
-5. Deploy repo CI runs Helm lint, Helm template, and kubeconform.
-6. Apply the chart with Helm or let a GitOps controller apply it.
-7. The migration Job runs `alembic upgrade head` before app pods roll forward.
+3. Console CI publishes a new image tag to GHCR when the console changes.
+4. Choose immutable image tags for deployment.
+5. Update the deploy repo values or pass tags with `--set`.
+6. Deploy repo CI runs Helm lint, Helm template, and kubeconform.
+7. Apply the chart with Helm or let a GitOps controller apply it.
+8. The migration Job runs `alembic upgrade head` before app pods roll forward.
 
 Manual Helm example:
 
@@ -72,7 +99,8 @@ helm upgrade --install llm-evaluation-service \
   --namespace llm-evaluation \
   --create-namespace \
   -f charts/llm-evaluation-service/values-dev.yaml \
-  --set image.tag=<full-commit-sha>
+  --set image.tag=<service-full-commit-sha> \
+  --set console.image.tag=<console-full-commit-sha>
 ```
 
 ## Local Demo Flow
@@ -91,6 +119,7 @@ Then:
 
 ```bash
 kubectl -n llm-evaluation port-forward service/llm-evaluation-service 8000:80
+kubectl -n llm-evaluation port-forward service/llm-evaluation-service-console 8501:80
 curl -s http://localhost:8000/health/ready
 ```
 
@@ -100,6 +129,7 @@ Local:
 
 - May use `latest`.
 - Enables demo Postgres.
+- Enables the console.
 - Can create demo Secret values.
 - Uses console or disabled telemetry export.
 
@@ -107,6 +137,7 @@ Dev:
 
 - Uses an immutable image tag.
 - Uses managed Postgres.
+- Can enable the console with an internal service URL or separate ingress.
 - Expects externally managed secrets.
 - Exports telemetry through OTLP.
 
@@ -115,6 +146,7 @@ Production-shaped example:
 - Uses an immutable image tag.
 - Uses multiple replicas.
 - Enables ingress placeholders.
+- Enables separate service and console ingress placeholders.
 - Expects managed secrets, managed Postgres, TLS, and platform-level controls.
 
 ## What Is Not Automated Yet

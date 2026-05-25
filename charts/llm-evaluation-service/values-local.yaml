@@ -21,3 +21,13 @@ migrations:
 
 ingress:
   enabled: false
+
+console:
+  enabled: true
+  image:
+    tag: latest
+    pullPolicy: IfNotPresent
+  config:
+    apiBaseUrl: ""
+  ingress:
+    enabled: false

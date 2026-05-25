@@ -1,10 +1,11 @@
 # llm-evaluation-service Helm Chart
 
-Deploys the LLM evaluation service to Kubernetes.
+Deploys the LLM evaluation service and optional Streamlit console to Kubernetes.
 
 The chart is intentionally small. It covers the API Deployment, Service, ServiceAccount,
-ConfigMap, optional Secret, optional demo Postgres, NetworkPolicy examples, and optional
-Ingress. It can also run Alembic migrations as a Helm pre-install/pre-upgrade Job.
+ConfigMap, optional Secret, optional demo Postgres, NetworkPolicy examples, optional
+console workload, and optional Ingress. It can also run Alembic migrations as a Helm
+pre-install/pre-upgrade Job.
 
 ## Values Files
 
@@ -64,6 +65,7 @@ Port-forward:
 
 ```bash
 kubectl -n llm-evaluation port-forward service/llm-evaluation-service 8000:80
+kubectl -n llm-evaluation port-forward service/llm-evaluation-service-console 8501:80
 ```
 
 Test:
@@ -76,6 +78,12 @@ Expected response:
 
 ```json
 {"status":"ready"}
+```
+
+Open the console at:
+
+```text
+http://localhost:8501
 ```
 
 ## Managed Runtime Install
@@ -100,7 +108,8 @@ helm upgrade --install llm-evaluation-service \
   --namespace llm-evaluation \
   --create-namespace \
   -f charts/llm-evaluation-service/values-dev.yaml \
-  --set image.tag=<full-commit-sha>
+  --set image.tag=<service-full-commit-sha> \
+  --set console.image.tag=<console-full-commit-sha>
 ```
 
 ## Database Migrations
@@ -140,6 +149,13 @@ ghcr.io/bfalkowski/llm-evaluation-service-starter:latest
 ghcr.io/bfalkowski/llm-evaluation-service-starter:<full-commit-sha>
 ```
 
+The console repo publishes:
+
+```text
+ghcr.io/bfalkowski/llm-evaluation-console:latest
+ghcr.io/bfalkowski/llm-evaluation-console:<full-commit-sha>
+```
+
 Use `latest` for quick local demos. Use full commit SHA tags for managed runtime
 deployments.
 
@@ -160,6 +176,10 @@ deployments.
 | `postgresDemo.enabled` | Enable local demo Postgres |
 | `networkPolicy.enabled` | Render NetworkPolicy resources |
 | `ingress.enabled` | Render Ingress resource |
+| `console.enabled` | Render the Streamlit console Deployment and Service |
+| `console.image.tag` | Console image tag to deploy |
+| `console.config.apiBaseUrl` | Optional API URL override; defaults to the in-cluster service URL |
+| `console.ingress.enabled` | Render console Ingress resource |
 
 ## Cleanup
 

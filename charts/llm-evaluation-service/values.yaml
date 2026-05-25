@@ -71,6 +71,46 @@ ingress:
     enabled: false
     secretName: ""
 
+console:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: ghcr.io/bfalkowski/llm-evaluation-console
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8501
+  config:
+    apiBaseUrl: ""
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    host: ""
+    tls:
+      enabled: false
+      secretName: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 768Mi
+
 resources:
   requests:
     cpu: 100m
