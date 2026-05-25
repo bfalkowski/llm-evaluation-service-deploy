@@ -26,6 +26,8 @@ charts/
 docs/
 ```
 
+Start with `docs/deployment-flow.md` for the full service-image-to-Helm-deploy flow.
+
 ## Render Locally
 
 See `charts/llm-evaluation-service/README.md` for full chart usage.
