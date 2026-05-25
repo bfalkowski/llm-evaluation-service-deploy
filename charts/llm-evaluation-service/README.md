@@ -25,6 +25,9 @@ helm template llm-evaluation-service \
   -f charts/llm-evaluation-service/values-local.yaml
 ```
 
+The chart includes `values.schema.json`, so `helm lint` also validates common value
+types and allowed options.
+
 Render all provided values files:
 
 ```bash
