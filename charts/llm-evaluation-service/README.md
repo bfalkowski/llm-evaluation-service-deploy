@@ -105,8 +105,7 @@ helm upgrade --install llm-evaluation-service \
 
 ## Database Migrations
 
-`values-local.yaml`, `values-dev.yaml`, and `values-prod-example.yaml` enable the
-migration Job:
+`values-dev.yaml` and `values-prod-example.yaml` enable the migration Job:
 
 ```yaml
 migrations:
@@ -128,6 +127,9 @@ config:
 
 That keeps schema changes as an explicit deployment step instead of relying on app
 startup to create tables.
+
+`values-local.yaml` keeps migrations disabled and `config.autoCreateSchema=true` because
+the demo Postgres Deployment may not be ready before a Helm pre-install hook runs.
 
 ## Image Tags
 

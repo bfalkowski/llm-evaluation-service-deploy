@@ -6,7 +6,7 @@ config:
   environment: local
   otelExporter: console
   otelOtlpEndpoint: ""
-  autoCreateSchema: false
+  autoCreateSchema: true
 
 secrets:
   create: true
@@ -17,7 +17,7 @@ postgresDemo:
   enabled: true
 
 migrations:
-  enabled: true
+  enabled: false
 
 ingress:
   enabled: false
