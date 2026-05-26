@@ -34,6 +34,7 @@ docs/
 
 Start with `docs/deployment-flow.md` for the full service-image-to-Helm-deploy flow.
 Use `docs/platform-map.md` for a quick map of the three repositories and runtime shape.
+Use `docs/release-flow.md` for the release checklist from source commit to deployment.
 Use `docs/local-platform.md` to run the API, demo Postgres, and console together in a
 local Kubernetes cluster.
 Use `docs/managed-kubernetes.md` for the managed runtime deployment path.

@@ -83,6 +83,7 @@ Responsibilities:
 ## Typical Managed Kubernetes Flow
 
 See `docs/managed-kubernetes.md` for the concrete managed-runtime runbook.
+See `docs/release-flow.md` for the release checklist.
 
 1. Merge a service change to `main`.
 2. Service CI publishes a new image tag to GHCR.
