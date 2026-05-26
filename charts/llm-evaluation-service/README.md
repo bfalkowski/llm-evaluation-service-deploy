@@ -94,6 +94,8 @@ root.
 
 Managed environments should provide secrets externally and use a managed Postgres
 connection string. Do not enable demo Postgres outside local development.
+For the full managed Kubernetes flow, see `docs/managed-kubernetes.md` from the
+repository root.
 
 Example with a pre-created Kubernetes Secret:
 

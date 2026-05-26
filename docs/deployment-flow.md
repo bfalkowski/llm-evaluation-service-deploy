@@ -82,6 +82,8 @@ Responsibilities:
 
 ## Typical Managed Kubernetes Flow
 
+See `docs/managed-kubernetes.md` for the concrete managed-runtime runbook.
+
 1. Merge a service change to `main`.
 2. Service CI publishes a new image tag to GHCR.
 3. Console CI publishes a new image tag to GHCR when the console changes.
