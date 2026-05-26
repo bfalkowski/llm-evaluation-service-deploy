@@ -30,8 +30,9 @@ helm template llm-evaluation-service \
 
 ## Install
 
-`values-local.yaml` enables demo Postgres, creates local demo Secret values, enables
-startup schema creation, runs a separate worker Deployment, and enables the console.
+`values-local.yaml` enables demo Postgres, creates local demo Secret values, runs
+migrations as a Kubernetes Job, runs a separate worker Deployment, and enables the
+console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -45,6 +46,7 @@ helm upgrade --install llm-evaluation-service \
 
 ```bash
 kubectl -n llm-evaluation get pods
+kubectl -n llm-evaluation wait --for=condition=complete job/llm-evaluation-service-migrations --timeout=180s
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-worker
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-console

@@ -38,6 +38,7 @@ config:
   otelEnabled: true
   otelExporter: console
   otelOtlpEndpoint: ""
+  workerStaleJobSeconds: 300
   storageBackend: postgres
   autoCreateSchema: false
 

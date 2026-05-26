@@ -10,5 +10,6 @@ data:
   APP_OTEL_ENABLED: {{ .Values.config.otelEnabled | quote }}
   APP_OTEL_EXPORTER: {{ .Values.config.otelExporter | quote }}
   APP_OTEL_OTLP_ENDPOINT: {{ .Values.config.otelOtlpEndpoint | quote }}
+  APP_WORKER_STALE_JOB_SECONDS: {{ .Values.config.workerStaleJobSeconds | quote }}
   APP_STORAGE_BACKEND: {{ .Values.config.storageBackend | quote }}
   APP_AUTO_CREATE_SCHEMA: {{ .Values.config.autoCreateSchema | quote }}

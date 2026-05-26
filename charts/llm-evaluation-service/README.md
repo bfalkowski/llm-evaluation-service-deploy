@@ -45,8 +45,9 @@ helm template llm-evaluation-service charts/llm-evaluation-service \
 
 ## Local Install
 
-`values-local.yaml` enables demo Postgres, creates demo Secret values, runs the API and
-worker as separate Deployments, and enables the companion Streamlit console.
+`values-local.yaml` enables demo Postgres, creates demo Secret values, runs migrations
+as a regular Kubernetes Job, runs the API and worker as separate Deployments, and
+enables the companion Streamlit console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -145,8 +146,10 @@ config:
 That keeps schema changes as an explicit deployment step instead of relying on app
 startup to create tables.
 
-`values-local.yaml` keeps migrations disabled and `config.autoCreateSchema=true` because
-the demo Postgres Deployment may not be ready before a Helm pre-install hook runs.
+`values-local.yaml` runs migrations as a regular Kubernetes Job with Helm hooks disabled
+because the demo Postgres Deployment may not be ready before a pre-install hook runs.
+For a fresh local namespace, API pods may be ready before the migration Job completes;
+wait for the migration Job before submitting evaluations.
 
 ## API And Worker Split
 
@@ -199,6 +202,7 @@ deployments.
 | `config.processRole` | Default service process role when no separate worker is enabled |
 | `config.otelExporter` | `console`, `otlp`, or `none` |
 | `config.otelOtlpEndpoint` | OTLP collector endpoint |
+| `config.workerStaleJobSeconds` | Age threshold for worker recovery of stale `running` jobs |
 | `config.autoCreateSchema` | Whether the app creates tables on startup |
 | `worker.enabled` | Render a separate worker Deployment and set API pods to API-only mode |
 | `worker.replicaCount` | Number of worker replicas |

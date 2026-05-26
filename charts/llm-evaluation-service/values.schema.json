@@ -96,6 +96,10 @@
         "otelOtlpEndpoint": {
           "type": "string"
         },
+        "workerStaleJobSeconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
         "storageBackend": {
           "type": "string",
           "enum": ["postgres", "memory"]
@@ -111,6 +115,7 @@
         "otelEnabled",
         "otelExporter",
         "otelOtlpEndpoint",
+        "workerStaleJobSeconds",
         "storageBackend",
         "autoCreateSchema"
       ]

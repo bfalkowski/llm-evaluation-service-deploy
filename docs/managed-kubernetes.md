@@ -94,6 +94,10 @@ With the worker enabled, API pods run in API-only mode and worker pods claim que
 from Postgres. This keeps request handling independent from evaluation processing and
 allows the two workloads to scale separately.
 
+Worker pods also recover stale `running` jobs after `config.workerStaleJobSeconds`. Jobs
+with attempts remaining return to `queued`; jobs that exhausted their attempt budget are
+marked `failed`.
+
 ## Telemetry
 
 Use OTLP export and point the service at the cluster collector.
