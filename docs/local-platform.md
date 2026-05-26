@@ -31,7 +31,7 @@ helm template llm-evaluation-service \
 ## Install
 
 `values-local.yaml` enables demo Postgres, creates local demo Secret values, enables
-startup schema creation, and enables the console.
+startup schema creation, runs a separate worker Deployment, and enables the console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -46,6 +46,7 @@ helm upgrade --install llm-evaluation-service \
 ```bash
 kubectl -n llm-evaluation get pods
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service
+kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-worker
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-console
 ```
 
@@ -53,8 +54,10 @@ If an image pull or startup issue occurs:
 
 ```bash
 kubectl -n llm-evaluation describe pod -l app.kubernetes.io/component=service
+kubectl -n llm-evaluation describe pod -l app.kubernetes.io/component=worker
 kubectl -n llm-evaluation describe pod -l app.kubernetes.io/component=console
 kubectl -n llm-evaluation logs -l app.kubernetes.io/component=service
+kubectl -n llm-evaluation logs -l app.kubernetes.io/component=worker
 kubectl -n llm-evaluation logs -l app.kubernetes.io/component=console
 ```
 

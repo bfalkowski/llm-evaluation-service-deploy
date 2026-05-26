@@ -63,6 +63,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/component: console
 {{- end -}}
 
+{{- define "llm-evaluation-service.workerName" -}}
+{{- printf "%s-worker" (include "llm-evaluation-service.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "llm-evaluation-service.workerSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "llm-evaluation-service.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: worker
+{{- end -}}
+
 {{- define "llm-evaluation-service.serviceUrl" -}}
 {{- printf "http://%s:%d" (include "llm-evaluation-service.fullname" .) (.Values.service.port | int) -}}
 {{- end -}}

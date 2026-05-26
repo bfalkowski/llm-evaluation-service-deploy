@@ -35,6 +35,11 @@ spec:
         - podSelector:
             matchLabels:
               {{- include "llm-evaluation-service.selectorLabels" . | nindent 14 }}
+        {{- if .Values.worker.enabled }}
+        - podSelector:
+            matchLabels:
+              {{- include "llm-evaluation-service.workerSelectorLabels" . | nindent 14 }}
+        {{- end }}
       ports:
         - protocol: TCP
           port: {{ .Values.postgresDemo.service.port }}

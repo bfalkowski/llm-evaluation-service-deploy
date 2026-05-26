@@ -8,6 +8,9 @@ config:
   otelOtlpEndpoint: http://otel-collector:4317
   autoCreateSchema: false
 
+worker:
+  enabled: true
+
 secrets:
   create: false
   existingSecretName: llm-evaluation-service-secrets

@@ -78,6 +78,10 @@
           "type": "string",
           "minLength": 1
         },
+        "processRole": {
+          "type": "string",
+          "enum": ["combined", "api", "worker"]
+        },
         "logLevel": {
           "type": "string",
           "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -102,6 +106,7 @@
       },
       "required": [
         "environment",
+        "processRole",
         "logLevel",
         "otelEnabled",
         "otelExporter",
@@ -109,6 +114,30 @@
         "storageBackend",
         "autoCreateSchema"
       ]
+    },
+    "worker": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "replicaCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "command": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "resources": {
+          "type": "object"
+        }
+      },
+      "required": ["enabled", "replicaCount", "command", "resources"]
     },
     "secrets": {
       "type": "object",
@@ -336,6 +365,7 @@
     "securityContext",
     "service",
     "config",
+    "worker",
     "secrets",
     "postgresDemo",
     "migrations",

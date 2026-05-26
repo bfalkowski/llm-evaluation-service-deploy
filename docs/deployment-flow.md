@@ -78,6 +78,7 @@ Responsibilities:
 - Secret expectations.
 - Managed Postgres assumptions.
 - Telemetry endpoint configuration.
+- API and worker deployment separation.
 - Offline manifest validation in CI.
 
 ## Typical Managed Kubernetes Flow
@@ -93,6 +94,7 @@ See `docs/release-flow.md` for the release checklist.
 6. Deploy repo CI runs Helm lint, Helm template, and kubeconform.
 7. Apply the chart with Helm or let a GitOps controller apply it.
 8. The migration Job runs `alembic upgrade head` before app pods roll forward.
+9. API pods serve requests while worker pods claim queued evaluation jobs from Postgres.
 
 Manual Helm example:
 
@@ -140,6 +142,7 @@ Dev:
 
 - Uses an immutable image tag.
 - Uses managed Postgres.
+- Runs separate API and worker Deployments.
 - Can enable the console with an internal service URL or separate ingress.
 - Expects externally managed secrets.
 - Exports telemetry through OTLP.
@@ -148,6 +151,7 @@ Production-shaped example:
 
 - Uses an immutable image tag.
 - Uses multiple replicas.
+- Scales API and worker Deployments independently.
 - Enables ingress placeholders.
 - Enables separate service and console ingress placeholders.
 - Expects managed secrets, managed Postgres, TLS, and platform-level controls.
@@ -158,5 +162,4 @@ Production-shaped example:
 - GitOps controller setup.
 - Cloud provider identity integration.
 - Managed Secret operator integration.
-- Database migrations.
-- Separate API and worker deployments.
+- Automated migration approval gates.

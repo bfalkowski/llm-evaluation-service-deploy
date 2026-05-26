@@ -33,12 +33,28 @@ service:
 
 config:
   environment: local
+  processRole: combined
   logLevel: INFO
   otelEnabled: true
   otelExporter: console
   otelOtlpEndpoint: ""
   storageBackend: postgres
   autoCreateSchema: false
+
+worker:
+  enabled: false
+  replicaCount: 1
+  command:
+    - python
+    - -m
+    - app.worker
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 secrets:
   create: false

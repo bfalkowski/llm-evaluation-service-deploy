@@ -8,6 +8,9 @@ config:
   otelOtlpEndpoint: ""
   autoCreateSchema: true
 
+worker:
+  enabled: true
+
 secrets:
   create: true
   databaseUrl: postgresql+asyncpg://app:app@llm-evaluation-service-postgres:5432/llm_evaluations

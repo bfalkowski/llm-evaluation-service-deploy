@@ -1,6 +1,7 @@
 # Managed Kubernetes Runbook
 
-Deploy the API service and Streamlit console to a managed Kubernetes environment.
+Deploy the API service, background worker, and Streamlit console to a managed Kubernetes
+environment.
 
 This flow assumes:
 
@@ -80,6 +81,19 @@ The migration Job runs:
 alembic upgrade head
 ```
 
+## API And Worker Split
+
+Managed values should run the API and background worker as separate Deployments.
+
+```yaml
+worker:
+  enabled: true
+```
+
+With the worker enabled, API pods run in API-only mode and worker pods claim queued jobs
+from Postgres. This keeps request handling independent from evaluation processing and
+allows the two workloads to scale separately.
+
 ## Telemetry
 
 Use OTLP export and point the service at the cluster collector.
@@ -154,6 +168,7 @@ helm upgrade --install llm-evaluation-service \
 ```bash
 kubectl -n llm-evaluation get pods
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service
+kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-worker
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-console
 kubectl -n llm-evaluation get jobs
 kubectl -n llm-evaluation get ingress

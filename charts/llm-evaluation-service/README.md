@@ -1,11 +1,12 @@
 # llm-evaluation-service Helm Chart
 
-Deploys the LLM evaluation service and optional Streamlit console to Kubernetes.
+Deploys the LLM evaluation service, optional background worker, and optional Streamlit
+console to Kubernetes.
 
 The chart is intentionally small. It covers the API Deployment, Service, ServiceAccount,
 ConfigMap, optional Secret, optional demo Postgres, NetworkPolicy examples, optional
-console workload, and optional Ingress. It can also run Alembic migrations as a Helm
-pre-install/pre-upgrade Job.
+worker workload, optional console workload, and optional Ingress. It can also run
+Alembic migrations as a Helm pre-install/pre-upgrade Job.
 
 ## Values Files
 
@@ -44,8 +45,8 @@ helm template llm-evaluation-service charts/llm-evaluation-service \
 
 ## Local Install
 
-`values-local.yaml` enables demo Postgres and creates demo Secret values.
-It also enables the companion Streamlit console.
+`values-local.yaml` enables demo Postgres, creates demo Secret values, runs the API and
+worker as separate Deployments, and enables the companion Streamlit console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -59,6 +60,7 @@ Check rollout:
 
 ```bash
 kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service
+kubectl -n llm-evaluation rollout status deployment/llm-evaluation-service-worker
 kubectl -n llm-evaluation get pods
 ```
 
@@ -146,6 +148,26 @@ startup to create tables.
 `values-local.yaml` keeps migrations disabled and `config.autoCreateSchema=true` because
 the demo Postgres Deployment may not be ready before a Helm pre-install hook runs.
 
+## API And Worker Split
+
+The chart can run evaluation processing in the API pods or in a separate worker
+Deployment.
+
+```yaml
+worker:
+  enabled: true
+```
+
+When `worker.enabled=true`, API pods run with `APP_PROCESS_ROLE=api` and worker pods run:
+
+```text
+python -m app.worker
+```
+
+Both workloads use the same service image, ConfigMap, Secret, and database. Keep
+`worker.enabled=true` for managed environments where API replicas should stay focused on
+request handling and worker replicas should process queued jobs.
+
 ## Image Tags
 
 The service repo publishes:
@@ -173,9 +195,12 @@ deployments.
 | `image.tag` | Image tag to deploy |
 | `replicaCount` | Number of API replicas |
 | `config.environment` | Service environment label |
+| `config.processRole` | Default service process role when no separate worker is enabled |
 | `config.otelExporter` | `console`, `otlp`, or `none` |
 | `config.otelOtlpEndpoint` | OTLP collector endpoint |
 | `config.autoCreateSchema` | Whether the app creates tables on startup |
+| `worker.enabled` | Render a separate worker Deployment and set API pods to API-only mode |
+| `worker.replicaCount` | Number of worker replicas |
 | `secrets.create` | Create a Kubernetes Secret from values |
 | `secrets.existingSecretName` | Use an externally managed Secret |
 | `migrations.enabled` | Render the Alembic migration Job |
