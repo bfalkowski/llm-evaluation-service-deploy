@@ -40,6 +40,12 @@ spec:
             matchLabels:
               {{- include "llm-evaluation-service.workerSelectorLabels" . | nindent 14 }}
         {{- end }}
+        {{- if .Values.migrations.enabled }}
+        - podSelector:
+            matchLabels:
+              {{- include "llm-evaluation-service.baseSelectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: migrations
+        {{- end }}
       ports:
         - protocol: TCP
           port: {{ .Values.postgresDemo.service.port }}
