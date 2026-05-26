@@ -7,6 +7,7 @@ config:
   otelExporter: console
   otelOtlpEndpoint: ""
   autoCreateSchema: false
+  authEnabled: true
 
 worker:
   enabled: true
@@ -15,6 +16,7 @@ secrets:
   create: true
   databaseUrl: postgresql+asyncpg://app:app@llm-evaluation-service-postgres:5432/llm_evaluations
   postgresPassword: app
+  authDemoSecret: local-demo-secret
 
 postgresDemo:
   enabled: true

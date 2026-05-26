@@ -157,6 +157,24 @@ http://llm-evaluation-service:80
 Override `console.config.apiBaseUrl` only when the console needs to call a different API
 endpoint.
 
+## Auth
+
+The chart exposes service auth settings through `config.authEnabled`,
+`config.authIssuer`, and `config.authAudience`. Local values use the service's demo
+HMAC JWT validator and expect `APP_AUTH_DEMO_SECRET` in the Kubernetes Secret.
+
+Managed environments should provide secret values through the platform, deployment
+pipeline, or secret operator:
+
+```text
+APP_DATABASE_URL
+APP_AUTH_DEMO_SECRET for demo/non-production auth only
+```
+
+Production deployments should replace the demo shared-secret validator with OIDC/JWKS
+or platform-managed identity. Keep real identity-provider secrets outside values files
+and source control.
+
 ## Example Install
 
 ```bash

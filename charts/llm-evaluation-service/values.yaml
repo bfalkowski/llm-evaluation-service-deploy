@@ -42,6 +42,9 @@ config:
   workerStaleJobSeconds: 300
   storageBackend: postgres
   autoCreateSchema: false
+  authEnabled: false
+  authIssuer: llm-evaluation-service
+  authAudience: llm-evaluation-service
 
 worker:
   enabled: false
@@ -62,6 +65,7 @@ secrets:
   create: false
   databaseUrl: ""
   postgresPassword: ""
+  authDemoSecret: ""
   existingSecretName: ""
 
 postgresDemo:

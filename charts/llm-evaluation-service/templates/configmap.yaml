@@ -13,3 +13,6 @@ data:
   APP_WORKER_STALE_JOB_SECONDS: {{ .Values.config.workerStaleJobSeconds | quote }}
   APP_STORAGE_BACKEND: {{ .Values.config.storageBackend | quote }}
   APP_AUTO_CREATE_SCHEMA: {{ .Values.config.autoCreateSchema | quote }}
+  APP_AUTH_ENABLED: {{ .Values.config.authEnabled | quote }}
+  APP_AUTH_ISSUER: {{ .Values.config.authIssuer | quote }}
+  APP_AUTH_AUDIENCE: {{ .Values.config.authAudience | quote }}

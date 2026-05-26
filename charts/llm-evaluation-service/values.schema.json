@@ -112,6 +112,17 @@
         },
         "autoCreateSchema": {
           "type": "boolean"
+        },
+        "authEnabled": {
+          "type": "boolean"
+        },
+        "authIssuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authAudience": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -123,7 +134,10 @@
         "otelOtlpEndpoint",
         "workerStaleJobSeconds",
         "storageBackend",
-        "autoCreateSchema"
+        "autoCreateSchema",
+        "authEnabled",
+        "authIssuer",
+        "authAudience"
       ]
     },
     "worker": {
@@ -162,11 +176,20 @@
         "postgresPassword": {
           "type": "string"
         },
+        "authDemoSecret": {
+          "type": "string"
+        },
         "existingSecretName": {
           "type": "string"
         }
       },
-      "required": ["create", "databaseUrl", "postgresPassword", "existingSecretName"]
+      "required": [
+        "create",
+        "databaseUrl",
+        "postgresPassword",
+        "authDemoSecret",
+        "existingSecretName"
+      ]
     },
     "postgresDemo": {
       "type": "object",

@@ -9,6 +9,7 @@ config:
   otelExporter: otlp
   otelOtlpEndpoint: http://otel-collector:4317
   autoCreateSchema: false
+  authEnabled: true
 
 worker:
   enabled: true

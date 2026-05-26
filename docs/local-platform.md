@@ -30,9 +30,9 @@ helm template llm-evaluation-service \
 
 ## Install
 
-`values-local.yaml` enables demo Postgres, creates local demo Secret values, runs
-migrations as a Kubernetes Job, runs a separate worker Deployment, and enables the
-console.
+`values-local.yaml` enables demo Postgres, creates local demo Secret values, enables
+demo JWT auth, runs migrations as a Kubernetes Job, runs a separate worker Deployment,
+and enables the console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -87,13 +87,23 @@ API health:
 curl -s http://localhost:8000/health/ready
 ```
 
+Create a local demo bearer token from the service repository:
+
+```bash
+cd ../llm-evaluation-service-starter
+APP_AUTH_DEMO_SECRET=local-demo-secret \
+python scripts/create_demo_jwt.py --tenant-id demo-tenant --subject local-user
+```
+
 Submit an evaluation:
 
 ```bash
+TOKEN="<paste-token>"
+
 curl -s -X POST http://localhost:8000/v1/evaluations \
   -H 'content-type: application/json' \
+  -H "authorization: Bearer ${TOKEN}" \
   -d '{
-    "tenant_id": "demo-tenant",
     "project_id": "demo-project",
     "question": "What should an LLM platform monitor?",
     "answer": "It should monitor failures, latency, cost, throughput, and quality.",
@@ -113,6 +123,7 @@ Use these default values in the console sidebar:
 API base URL: http://llm-evaluation-service:80
 Tenant: demo-tenant
 Project: demo-project
+Bearer token: <paste-token>
 ```
 
 For a browser running outside the cluster, the console itself calls the API from inside
@@ -154,6 +165,6 @@ kubectl delete namespace llm-evaluation
 
 ## Notes
 
-- The local demo Secret values are not suitable for shared environments.
+- The local demo Secret values, including `APP_AUTH_DEMO_SECRET`, are not suitable for shared environments.
 - Demo Postgres does not use persistent storage.
-- Managed environments should use managed Postgres, external secret injection, TLS, and immutable image tags.
+- Managed environments should use managed Postgres, external secret injection, TLS, immutable image tags, and production identity-provider integration.

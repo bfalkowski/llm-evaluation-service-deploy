@@ -45,9 +45,9 @@ helm template llm-evaluation-service charts/llm-evaluation-service \
 
 ## Local Install
 
-`values-local.yaml` enables demo Postgres, creates demo Secret values, runs migrations
-as a regular Kubernetes Job, runs the API and worker as separate Deployments, and
-enables the companion Streamlit console.
+`values-local.yaml` enables demo Postgres, creates demo Secret values, enables demo JWT
+auth, runs migrations as a regular Kubernetes Job, runs the API and worker as separate
+Deployments, and enables the companion Streamlit console.
 
 ```bash
 helm upgrade --install llm-evaluation-service \
@@ -84,6 +84,14 @@ Expected response:
 {"status":"ready"}
 ```
 
+Create a local demo bearer token from the service repository and use it for evaluation
+requests or paste it into the console sidebar:
+
+```bash
+APP_AUTH_DEMO_SECRET=local-demo-secret \
+python scripts/create_demo_jwt.py --tenant-id demo-tenant --subject local-user
+```
+
 Open the console at:
 
 ```text
@@ -104,10 +112,16 @@ Example with a pre-created Kubernetes Secret:
 
 ```bash
 export APP_DATABASE_URL='<managed-postgres-connection-url>'
+export APP_AUTH_DEMO_SECRET='<demo-auth-secret-for-non-production-only>'
 
 kubectl -n llm-evaluation create secret generic llm-evaluation-service-secrets \
-  --from-literal=APP_DATABASE_URL="$APP_DATABASE_URL"
+  --from-literal=APP_DATABASE_URL="$APP_DATABASE_URL" \
+  --from-literal=APP_AUTH_DEMO_SECRET="$APP_AUTH_DEMO_SECRET"
 ```
+
+The demo auth secret is suitable for local and non-production demonstration only.
+Production deployments should use OIDC/JWKS or platform auth instead of the demo
+shared-secret validator.
 
 Install with the dev values and an immutable image tag:
 
@@ -205,9 +219,13 @@ deployments.
 | `config.otelOtlpEndpoint` | OTLP collector endpoint |
 | `config.workerStaleJobSeconds` | Age threshold for worker recovery of stale `running` jobs |
 | `config.autoCreateSchema` | Whether the app creates tables on startup |
+| `config.authEnabled` | Require bearer-token auth for evaluation routes |
+| `config.authIssuer` | Expected demo JWT issuer |
+| `config.authAudience` | Expected demo JWT audience |
 | `worker.enabled` | Render a separate worker Deployment and set API pods to API-only mode |
 | `worker.replicaCount` | Number of worker replicas |
 | `secrets.create` | Create a Kubernetes Secret from values |
+| `secrets.authDemoSecret` | Local/demo HMAC secret for demo JWT auth |
 | `secrets.existingSecretName` | Use an externally managed Secret |
 | `migrations.enabled` | Render the Alembic migration Job |
 | `postgresDemo.enabled` | Enable local demo Postgres |
@@ -228,6 +246,7 @@ kubectl delete namespace llm-evaluation
 ## Notes
 
 - Secret values in `values-local.yaml` are only for local demos.
+- Production deployments should replace demo JWT validation with OIDC/JWKS or platform auth.
 - Managed environments should inject secrets through the platform or deployment pipeline.
 - NetworkPolicy behavior depends on the cluster CNI.
 - The chart does not install an OpenTelemetry Collector; it only configures the service to export to one.

@@ -90,5 +90,7 @@ Kubernetes environments.
 
 Do not commit real secrets. Local secret files and `.env` files are ignored.
 
-The chart can create demo secrets for local use, but managed environments should inject
-secrets through the platform, deployment pipeline, or a dedicated secret operator.
+The chart can create demo secrets for local use, including the demo JWT shared secret.
+Managed environments should inject secrets through the platform, deployment pipeline,
+or a dedicated secret operator, and production deployments should replace demo JWT auth
+with OIDC/JWKS or platform identity.
