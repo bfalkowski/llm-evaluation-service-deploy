@@ -129,6 +129,17 @@ Bearer token: <paste-token>
 For a browser running outside the cluster, the console itself calls the API from inside
 the cluster, so the in-cluster API URL is expected.
 
+## Verify Auth Secret Wiring
+
+After install or chart changes, confirm the release secret includes demo auth keys:
+
+```bash
+./scripts/verify-local-helm-auth.sh llm-evaluation llm-evaluation-service
+```
+
+If `APP_AUTH_DEMO_SECRET` is missing, re-run `helm upgrade` with `values-local.yaml` so
+Kubernetes recreates the secret from the chart template.
+
 ## Upgrade Images
 
 For local demos:
