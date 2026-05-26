@@ -129,6 +129,9 @@ helm upgrade --install llm-evaluation-service \
   --set console.image.tag=latest
 ```
 
+`values-local.yaml` uses `Always` as the pull policy because `latest` can otherwise
+reuse a stale image already cached by the local Kubernetes node.
+
 For reproducible managed-runtime style testing, use immutable tags:
 
 ```bash

@@ -1,6 +1,6 @@
 image:
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 config:
   environment: local
@@ -29,7 +29,7 @@ console:
   enabled: true
   image:
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   config:
     apiBaseUrl: ""
   ingress:

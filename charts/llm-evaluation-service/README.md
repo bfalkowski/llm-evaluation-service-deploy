@@ -184,7 +184,8 @@ ghcr.io/bfalkowski/llm-evaluation-console:latest
 ghcr.io/bfalkowski/llm-evaluation-console:<full-commit-sha>
 ```
 
-Use `latest` for quick local demos. Use full commit SHA tags for managed runtime
+Use `latest` with `image.pullPolicy=Always` for quick local demos so the cluster does
+not reuse a stale cached image. Use full commit SHA tags for managed runtime
 deployments.
 
 ## Important Values
