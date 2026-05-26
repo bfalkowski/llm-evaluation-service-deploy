@@ -39,14 +39,15 @@ Expected shape:
 
 ## 4. Metrics
 
-Add metrics for operational visibility.
+Expand metrics for operational visibility.
 
 Expected shape:
 
-- Request count and latency.
+- Request count and latency. Added in service and exposed at `/metrics`.
+- Evaluation job status counts. Added in service and exposed at `/metrics`.
+- Scoring latency. Added in service and exposed at `/metrics`.
+- Service scrape annotations. Supported by chart values.
 - Job queue depth and age.
-- Evaluation success/failure counts.
-- Scoring latency.
 - Provider error and timeout counts.
 - Optional cost and token usage signals when a real provider is added.
 

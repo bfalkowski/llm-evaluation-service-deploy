@@ -67,9 +67,15 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 65535
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       },
-      "required": ["type", "port", "targetPort"]
+      "required": ["type", "port", "targetPort", "annotations"]
     },
     "config": {
       "type": "object",

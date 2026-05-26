@@ -110,6 +110,20 @@ config:
 
 The chart does not install the collector. The cluster should provide one separately.
 
+The service exposes Prometheus-compatible metrics at `/metrics`. If your cluster uses
+annotation-based scraping, add Service annotations in the environment values:
+
+```yaml
+service:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "80"
+```
+
+If your platform uses the Prometheus Operator, define the ServiceMonitor in the
+environment or platform repo that owns monitoring CRDs.
+
 ## Ingress And TLS
 
 The API and console can be exposed independently.

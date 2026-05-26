@@ -198,6 +198,7 @@ deployments.
 | `image.repository` | Container image repository |
 | `image.tag` | Image tag to deploy |
 | `replicaCount` | Number of API replicas |
+| `service.annotations` | Optional Service annotations, including scrape metadata for `/metrics` |
 | `config.environment` | Service environment label |
 | `config.processRole` | Default service process role when no separate worker is enabled |
 | `config.otelExporter` | `console`, `otlp`, or `none` |
