@@ -38,6 +38,7 @@ Use `docs/release-flow.md` for the release checklist from source commit to deplo
 Use `docs/local-platform.md` to run the API, demo Postgres, and console together in a
 local Kubernetes cluster.
 Use `docs/managed-kubernetes.md` for the managed runtime deployment path.
+Use `docs/roadmap.md` for the next implementation milestones.
 
 ## Render Locally
 
